@@ -23,4 +23,18 @@ Searching for information across multiple documents is time-consuming and often 
 
 ## Prerequisites
 
-- Gemini API key
+- export GEMINI_API_KEY=yourkey
+
+- sudo apt update
+- sudo apt install -y curl
+- curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+- sudo apt install -y nodejs
+- node -v
+- npm -v
+
+## Usage
+
+- npm install
+- npm run dev:full
+- After running 'npm run dev:full' copy the '➜  Local:   http://localhost:5173/' link and paste into your preferred browser.
+
