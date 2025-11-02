@@ -2,9 +2,13 @@
 
 A web application that uses large language models to automatically extract information from multiple documents and answer user-defined questions.
 
+---
+
 ## Overview
 
 Searching for information across multiple documents is time-consuming and often requires reasoning beyond simple keyword matching. This project presents an application that uses large language models to automate information extraction from multiple documents. The system reads documents in various formats, processes user-defined questions, and outputs structured answers with source attribution. Performance is tracked using Weights and Biases.
+
+---
 
 ## Features
 
@@ -14,6 +18,8 @@ Searching for information across multiple documents is time-consuming and often 
 - **Performance tracking**: Integrated W&B logging for metrics
 - **Simple UI**: Easy-to-use user interface
 
+---
+
 ## Use Cases
 
 - Scholarship and award applications
@@ -21,20 +27,64 @@ Searching for information across multiple documents is time-consuming and often 
 - Technical documentation search
 - Resume and CV screening
 
+---
+
 ## Prerequisites
 
-- export GEMINI_API_KEY=yourkey
+### System Requirements
 
-- sudo apt update
-- sudo apt install -y curl
-- curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-- sudo apt install -y nodejs
-- node -v
-- npm -v
+Update system and install dependencies:
+```bash
+sudo apt update
+sudo apt install -y curl
+```
+
+### Node.js Installation
+
+Install Node.js (version 22):
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+
+Verify installation:
+```bash
+node -v
+npm -v
+```
+
+### API Key Setup
+
+Export your Gemini API key:
+```bash
+export GEMINI_API_KEY=yourkey
+```
+
+---
+
+## Installation
+
+Install project dependencies:
+```bash
+npm install
+```
+
+---
 
 ## Usage
 
-- npm install
-- npm run dev:full
-- After running 'npm run dev:full' copy the '➜  Local:   http://localhost:5173/' link and paste into your preferred browser.
+### Starting the Application
 
+Run the development server:
+```bash
+npm run dev:full
+```
+
+### Accessing the Interface
+
+After running the command above, copy the local URL displayed in the terminal:
+```
+➜  Local:   http://localhost:5173/
+```
+
+Paste this link into your preferred browser to access the application.
