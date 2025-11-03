@@ -88,3 +88,10 @@ After running the command above, copy the local URL displayed in the terminal:
 ```
 
 Paste this link into your preferred browser to access the application.
+
+---
+
+## Checkpoint 1 Manual Demo Scenarios
+- See docs/manual-prompt-scenarios.md for curated manual prompts, acceptance criteria, and expected responses that demonstrate the scholarship application assistant workflow.
+- Treat each scenario as a requirement-level acceptance test. Update the server prompt if a response fails any criterion, then rerun the scenario to confirm compliance.
+
