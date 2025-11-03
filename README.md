@@ -1,12 +1,13 @@
 # Multi-Document Information Extractor
 
-A web application that uses large language models to automatically extract information from multiple documents and answer user-defined questions.
+Searching for information across multiple documents is time-consuming and often requires reasoning beyond simple keyword matching. This project presents an application that uses large language models to automate information extraction from multiple documents. The system reads documents in various formats, processes user-defined questions, and outputs structured answers with source attribution. Performance is tracked using Weights and Biases.
 
 ---
 
-## Overview
+## Documentation
 
-Searching for information across multiple documents is time-consuming and often requires reasoning beyond simple keyword matching. This project presents an application that uses large language models to automate information extraction from multiple documents. The system reads documents in various formats, processes user-defined questions, and outputs structured answers with source attribution. Performance is tracked using Weights and Biases.
+- [PowerPoint Proposal](https://catmailohio-my.sharepoint.com/:p:/g/personal/am893120_ohio_edu/ERL8YD0zg0dKpSmRaD6P0_IB15sRSAr17Pw7vXwrnDd3mg?e=4Cocvk)
+- [Research Paper](https://www.overleaf.com/read/jjyqfqyvwchx#e1557a)
 
 ---
 
@@ -92,6 +93,5 @@ Paste this link into your preferred browser to access the application.
 ---
 
 ## Checkpoint 1 Manual Demo Scenarios
-- See docs/manual-prompt-scenarios.md for curated manual prompts, acceptance criteria, and expected responses that demonstrate the scholarship application assistant workflow.
-- Treat each scenario as a requirement-level acceptance test. Update the server prompt if a response fails any criterion, then rerun the scenario to confirm compliance.
+- See docs/prompt-scenarios-allison.md for curated manual prompts and acceptance criteria.
 
