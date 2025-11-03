@@ -59,3 +59,6 @@ Tell us about your experience using Photoshop.
 ```
 The document does not contain information about experience using Photoshop.
 ```
+
+## Results
+Overall, the AI assistant met the Global Output Acceptance Criteria. 
