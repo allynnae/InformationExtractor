@@ -3,9 +3,6 @@
     <div class="w-full max-w-3xl flex flex-col items-center gap-10">
       <header class="w-full text-center space-y-3">
         <h1 class="text-4xl font-semibold text-sky-500">Information Extractor</h1>
-        <p class="text-base text-slate-600 mx-auto max-w-xl">
-          Make applications easy.
-        </p>
       </header>
 
       <section class="w-full grid gap-6 rounded-3xl bg-white/90 p-8 shadow-xl ring-1 ring-slate-200 backdrop-blur">
@@ -22,7 +19,7 @@
               ref="fileInput"
               type="file"
               multiple
-              accept=".txt,.md,.json,.csv,.log,.html,.xml,.pdf"
+              accept=".txt,.md,.json,.csv,.log,.html,.xml,.pdf,.cc"
               class="hidden"
               @change="onFileChange"
             />

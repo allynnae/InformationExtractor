@@ -55,15 +55,15 @@ app.post('/api/ask', async (req, res) => {
       return res.status(400).json({ error: 'Both content and question are required.' });
     }
 
-    const prompt = `
-You are an assistant that extracts information from documents.
-Document:
----
-${content.slice(0, 4000)}
----
-Question: ${question}
-Provide a concise and clear answer based only on the information in the document.
-    `;
+    // Sanitize incoming content: remove null bytes and other unlikely control characters
+    // that can appear if a non-text/binary file was uploaded with a .cc extension.
+    const rawContent = String(content ?? '');
+    const cleanedContent = rawContent.replace(/\0/g, '').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+
+    // Log sizes to help debugging when a particular file type triggers server errors
+    console.log(`Incoming /api/ask request — question_len=${String(question ?? '').length}, content_len=${cleanedContent.length}`);
+
+    const prompt = `\nYou are an assistant that extracts information from documents.\nDocument:\n---\n${cleanedContent.slice(0, 4000)}\n---\nQuestion: ${question}\nProvide a concise and clear answer based only on the information in the document.\n    `;
 
     const completion = await client.chat.completions.create({
       model: 'gemini-2.0-flash',
