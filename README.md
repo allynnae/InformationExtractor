@@ -24,7 +24,6 @@ Searching for information across multiple documents is time-consuming and often 
 ## Use Cases
 
 - Scholarship and award applications
-- Research paper analysis
 - Technical documentation search
 - Resume and CV screening
 
@@ -76,22 +75,17 @@ npm install
 
 ### Starting the Application
 
-Run the development server:
+Run this in the background before going to the extension:
 ```bash
-npm run dev:full
+npm run dev:server
 ```
 
 ### Accessing the Interface
-
-After running the command above, copy the local URL displayed in the terminal:
-```
-➜  Local:   http://localhost:5173/
-```
-
-Paste this link into your preferred browser to access the application.
+- Load the extension in Chrome: visit `chrome://extensions`, enable **Developer mode**, and click **Load unpacked**. Select the `extension/` directory. I recommend pinning it to your toolbar for easy access.
+- Configure your data: open the extension popup and choose and upload the documents you want the assistant to use.
+- Autofill a form: navigate to an application page, click the extension’s toolbar icon, and press **Autofill this page** to populate the detected fields using your stored documents.
 
 ---
 
 ## Checkpoint 1 Manual Demo Scenarios
 - See docs/prompt-scenarios-allison.md for curated manual prompts and acceptance criteria.
-

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Application Assistant Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page__header">
+        <h1 class="page__title">Application Assistant Settings</h1>
+        <p class="page__description">
+          Provide your personal details and key document snippets so the extension can populate forms accurately.
+        </p>
+      </header>
+
+      <section class="card">
+        <h2 class="card__title">Server configuration</h2>
+        <label class="field">
+          <span class="field__label">Gemini proxy base URL</span>
+          <input
+            id="serverBaseUrl"
+            type="url"
+            placeholder="http://localhost:3000"
+            class="field__input"
+          />
+          <small class="field__hint">
+            The extension calls this server for Gemini completions and PDF extraction.
+          </small>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2 class="card__title">Supplementary documents</h2>
+        <div class="upload">
+          <label for="documentFile" class="upload__label">
+            <input
+              id="documentFile"
+              type="file"
+              class="upload__input"
+              accept=".txt,.md,.pdf,.json,.csv,.doc,.docx"
+            />
+            <span>Add document</span>
+          </label>
+          <p class="upload__hint">
+            Upload files to be used as additional context during autofill. Supported formats: TXT, MD, PDF, DOC, DOCX, JSON, CSV.
+          </p>
+        </div>
+
+        <ul id="documentList" class="document-list"></ul>
+      </section>
+
+      <section class="card card--danger">
+        <h2 class="card__title">Data control</h2>
+        <button id="clearData" class="danger-button">Remove all stored data</button>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
