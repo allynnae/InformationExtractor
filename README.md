@@ -87,5 +87,20 @@ npm run dev:server
 
 ---
 
+## ASSURE-inspired Demo
+
+Use the new ASSURE-style harness to mirror the process described in [ASSURE: Metamorphic Testing for AI-powered Browser Extensions (arXiv:2507.05307)](https://arxiv.org/pdf/2507.05307). The demo showcases:
+- **Test case generation** - curated scenarios in `tests/assure-demo.js` automatically create baseline + metamorphic variants (document shuffles, paraphrased prompts, injected distractors).
+- **Automated execution** - every variant is sent to `/api/ask` so you can observe how the model behaves under controlled perturbations.
+- **Validation pipeline** - lexical/keyword invariants and security guards check consistency instead of relying on brittle exact matches.
+
+### Run the demo
+1. Export `GEMINI_API_KEY` and start the API server: `npm run dev:server`.
+2. (Optional) Point to a different server with `ASSURE_SERVER_URL=http://localhost:4000`.
+3. From another terminal run `npm run demo:assure`.
+4. Review the PASS/FAIL report printed to the console. The script exits with code `1` if any invariant fails, making it easy to wire into CI.
+
+---
+
 ## Checkpoint 1 Manual Demo Scenarios
-- See docs/prompt-scenarios-allison.md for curated manual prompts and acceptance criteria.
+- See `tests/prompt-scenarios-allison.md` for curated manual prompts and acceptance criteria.
