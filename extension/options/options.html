@@ -15,22 +15,6 @@
       </header>
 
       <section class="card">
-        <h2 class="card__title">Server configuration</h2>
-        <label class="field">
-          <span class="field__label">Gemini proxy base URL</span>
-          <input
-            id="serverBaseUrl"
-            type="url"
-            placeholder="http://localhost:3000"
-            class="field__input"
-          />
-          <small class="field__hint">
-            The extension calls this server for Gemini completions and PDF extraction.
-          </small>
-        </label>
-      </section>
-
-      <section class="card">
         <h2 class="card__title">Supplementary documents</h2>
         <div class="upload">
           <label for="documentFile" class="upload__label">
@@ -53,6 +37,21 @@
       <section class="card card--danger">
         <h2 class="card__title">Data control</h2>
         <button id="clearData" class="danger-button">Remove all stored data</button>
+      </section>
+
+      <section class="card card--muted">
+        <div class="card__row">
+          <div class="card__copy">
+            <h2 class="card__title">Server configuration</h2>
+            <p class="card__description">
+              Manage the Gemini proxy base URL on a dedicated configuration page.
+            </p>
+            <p class="card__hint">
+              Current server: <span id="serverBaseUrlPreview">Loading...</span>
+            </p>
+          </div>
+          <button id="openServerConfig" class="primary-button">Open server settings</button>
+        </div>
       </section>
     </main>
 

@@ -1,12 +1,14 @@
-const serverBaseUrlInput = document.getElementById("serverBaseUrl");
 const documentFileInput = document.getElementById("documentFile");
 const documentList = document.getElementById("documentList");
 const clearDataButton = document.getElementById("clearData");
+const serverConfigButton = document.getElementById("openServerConfig");
+const serverBaseUrlPreview = document.getElementById("serverBaseUrlPreview");
 const toast = document.getElementById("toast");
 
 const DEFAULT_SERVER = "http://localhost:3000";
 let documents = [];
 let toastTimer = null;
+let serverBaseUrl = DEFAULT_SERVER;
 
 const normalizeBaseUrl = value => {
   if (!value) return DEFAULT_SERVER;
@@ -92,16 +94,10 @@ const renderDocuments = () => {
   });
 };
 
-const loadState = async () => {
-  const state = await storageGet(["serverBaseUrl", "documents"]);
-  const baseUrl = normalizeBaseUrl(state.serverBaseUrl || DEFAULT_SERVER);
-  serverBaseUrlInput.value = baseUrl;
-  if (baseUrl !== state.serverBaseUrl) {
-    storageSet({ serverBaseUrl: baseUrl });
+const updateServerPreview = () => {
+  if (serverBaseUrlPreview) {
+    serverBaseUrlPreview.textContent = serverBaseUrl || DEFAULT_SERVER;
   }
-
-  documents = Array.isArray(state.documents) ? state.documents : [];
-  renderDocuments();
 };
 
 const readFileAsText = file =>
@@ -113,14 +109,21 @@ const readFileAsText = file =>
   });
 
 const extractPdfText = async file => {
-  const baseUrl = normalizeBaseUrl(serverBaseUrlInput.value);
+  const baseUrl = normalizeBaseUrl(serverBaseUrl);
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch(`${baseUrl.replace(/\/+$/, "")}/api/extract-pdf`, {
-    method: "POST",
-    body: formData
-  });
+  let response;
+  try {
+    response = await fetch(`${baseUrl.replace(/\/+$/, "")}/api/extract-pdf`, {
+      method: "POST",
+      body: formData
+    });
+  } catch (error) {
+    throw new Error(
+      `Cannot reach the server at ${baseUrl}. Start it with "npm run dev" and confirm the URL under Server settings.`
+    );
+  }
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
@@ -168,14 +171,6 @@ const handleDocumentUpload = async event => {
   }
 };
 
-const handleServerBaseUrlChange = () => {
-  const normalized = normalizeBaseUrl(serverBaseUrlInput.value);
-  serverBaseUrlInput.value = normalized;
-  storageSet({ serverBaseUrl: normalized }).then(() => {
-    showToast("Server base URL updated.");
-  });
-};
-
 const handleClearData = async () => {
   const confirmClear = window.confirm(
     "Remove all stored profile and documents? This action cannot be undone."
@@ -185,17 +180,35 @@ const handleClearData = async () => {
   }
 
   await storageRemove(["documents", "serverBaseUrl"]);
-  serverBaseUrlInput.value = DEFAULT_SERVER;
+  serverBaseUrl = DEFAULT_SERVER;
+  updateServerPreview();
   documents = [];
   renderDocuments();
   showToast("All extension data cleared.");
 };
 
+const loadState = async () => {
+  const state = await storageGet(["serverBaseUrl", "documents"]);
+  serverBaseUrl = normalizeBaseUrl(state.serverBaseUrl || DEFAULT_SERVER);
+  if (serverBaseUrl !== state.serverBaseUrl) {
+    storageSet({ serverBaseUrl });
+  }
+
+  documents = Array.isArray(state.documents) ? state.documents : [];
+  renderDocuments();
+  updateServerPreview();
+};
+
 documentFileInput.addEventListener("change", handleDocumentUpload);
-serverBaseUrlInput.addEventListener("change", handleServerBaseUrlChange);
 clearDataButton.addEventListener("click", event => {
   event.preventDefault();
   handleClearData();
 });
+
+if (serverConfigButton) {
+  serverConfigButton.addEventListener("click", () => {
+    window.location.href = "server.html";
+  });
+}
 
 loadState();

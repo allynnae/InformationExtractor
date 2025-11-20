@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Server Configuration</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page__header">
+        <h1 class="page__title">Server configuration</h1>
+        <p class="page__description">
+          Set the Gemini proxy base URL used for completions and PDF extraction.
+        </p>
+      </header>
+
+      <section class="card">
+        <form id="serverForm" class="stack">
+          <label class="field">
+            <span class="field__label">Gemini proxy base URL</span>
+            <input
+              id="serverBaseUrl"
+              type="url"
+              placeholder="http://localhost:3000"
+              class="field__input"
+              autocomplete="off"
+            />
+            <small class="field__hint">
+              The extension calls this server for Gemini completions and PDF extraction.
+            </small>
+          </label>
+
+          <div class="button-row">
+            <button type="submit" class="primary-button">Save server URL</button>
+            <button type="button" id="backToSettings" class="ghost-button">
+              Back to main settings
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script type="module" src="server.js"></script>
+  </body>
+</html>

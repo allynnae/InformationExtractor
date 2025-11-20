@@ -8,16 +8,18 @@ import OpenAI from "openai";
 const app = express();
 const initialPort = Number(process.env.PORT) || 3000;
 const apiKey = process.env.GEMINI_API_KEY;
+const client = apiKey
+  ? new OpenAI({
+      apiKey,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+    })
+  : null;
 
 if (!apiKey) {
-  console.error("Missing GEMINI_API_KEY environment variable. Set it before starting the server.");
-  process.exit(1);
+  console.warn(
+    "GEMINI_API_KEY is not set. The server will start, but /api/ask requests will fail until you add the key."
+  );
 }
-
-const client = new OpenAI({
-  apiKey,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
-});
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -51,6 +53,12 @@ app.post("/api/extract-pdf", upload.single("file"), async (req, res) => {
 
 app.post("/api/ask", async (req, res) => {
   try {
+    if (!client) {
+      return res.status(500).json({
+        error: "GEMINI_API_KEY is not set. Add it to your environment and restart the server to ask questions."
+      });
+    }
+
     const { content, question } = req.body || {};
 
     if (!content || !question) {

@@ -51,11 +51,48 @@ body {
   border-color: rgba(226, 29, 72, 0.25);
 }
 
+.card--muted {
+  border-color: rgba(148, 163, 184, 0.25);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
 .card__title {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
   color: #0f172a;
+}
+
+.card__description {
+  margin: 4px 0 0;
+  color: #475569;
+}
+
+.card__hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.card__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 520px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .field {
@@ -191,6 +228,54 @@ body {
 
 .document__button:hover {
   background: #fecaca;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-button {
+  appearance: none;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #0284c7;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+}
+
+.primary-button:hover {
+  background: #0369a1;
+  box-shadow: 0 12px 26px rgba(2, 132, 199, 0.25);
+  transform: translateY(-1px);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(2, 132, 199, 0.18);
+}
+
+.ghost-button {
+  appearance: none;
+  border: 1px solid #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ghost-button:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
 }
 
 .toast {
