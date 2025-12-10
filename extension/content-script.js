@@ -26,52 +26,221 @@ const isElementVisible = element => {
   );
 };
 
-const getLabelText = element => {
-  if (element.id) {
-    const label = document.querySelector(`label[for="${CSS.escape(element.id)}"]`);
-    if (label?.innerText) {
-      return label.innerText.trim();
-    }
-  }
+const collectText = node => {
+  if (!node) return "";
+  const raw =
+    typeof node === "string" ? node : (node.innerText || node.textContent || "");
+  const text = raw.replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  return text.slice(0, 240);
+};
 
-  const closestLabel = element.closest("label");
-  if (closestLabel?.innerText) {
-    return closestLabel.innerText.trim();
-  }
+const QUESTION_CONTAINER_SELECTORS = [
+  "[role='listitem']",
+  "[role='group']",
+  "[role='radiogroup']",
+  "[role='presentation']",
+  "[data-params]",
+  "section",
+  "article",
+  "fieldset",
+  "li",
+  ".question",
+  ".freebirdFormviewerViewNumberedItemContainer",
+  ".freebirdFormviewerViewItemsItemItem",
+  ".form-question",
+  ".form-group",
+  ".field",
+  ".QuestionContainer",
+  ".FormQuestion"
+];
 
-  const ariaLabel = element.getAttribute("aria-label");
-  if (ariaLabel) {
-    return ariaLabel.trim();
-  }
+const QUESTION_TEXT_SELECTORS = [
+  "[role='heading']",
+  "[aria-level]",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "legend",
+  "label",
+  "p",
+  "strong",
+  "b",
+  ".question-title",
+  ".prompt",
+  ".title",
+  ".M7eMe",
+  ".aDTYNe",
+  ".F9yp7e",
+  ".Qr7Oae",
+  ".l9xauj",
+  "span"
+];
 
-  const describedBy = element
-    .getAttribute("aria-describedby")
+const getAriaLinkedText = (element, attr) =>
+  element
+    .getAttribute(attr)
     ?.split(/\s+/)
     .map(id => document.getElementById(id))
     .filter(Boolean)
-    .map(el => el.innerText.trim())
+    .map(collectText)
     .filter(Boolean)
-    .join(" ");
+    .join(" ")
+    .trim() || "";
 
-  return describedBy || "";
+const findSiblingLabel = element => {
+  let sibling = element.previousElementSibling;
+  let hops = 0;
+  while (sibling && hops < 4) {
+    if (sibling.tagName?.toLowerCase() === "label") {
+      const text = collectText(sibling);
+      if (text) return text;
+    }
+    sibling = sibling.previousElementSibling;
+    hops += 1;
+  }
+  return "";
 };
 
-const getNearbyText = element => {
-  let walker = element.parentElement;
-  const texts = [];
-  let hops = 0;
+const getLabelText = element => {
+  if (element.id) {
+    const label = document.querySelector(`label[for="${CSS.escape(element.id)}"]`);
+    const labelText = collectText(label);
+    if (labelText) return labelText;
+  }
 
-  while (walker && hops < 3) {
-    const text = walker.innerText?.trim();
-    if (text) {
-      texts.push(text);
+  const closestLabel = element.closest("label");
+  const closestLabelText = collectText(closestLabel);
+  if (closestLabelText) return closestLabelText;
+
+  const siblingLabel = findSiblingLabel(element);
+  if (siblingLabel) return siblingLabel;
+
+  const parentLabel = element.parentElement?.querySelector("label");
+  const parentLabelText = collectText(parentLabel);
+  if (parentLabelText) return parentLabelText;
+
+  const ariaLabel = collectText(element.getAttribute("aria-label") || "");
+  if (ariaLabel) return ariaLabel;
+
+  const labelledBy = getAriaLinkedText(element, "aria-labelledby");
+  if (labelledBy) return labelledBy;
+
+  const describedBy = getAriaLinkedText(element, "aria-describedby");
+  if (describedBy) return describedBy;
+
+  return "";
+};
+
+
+const getNearbyText = element => {
+  const snippets = new Set();
+
+  const pushText = node => {
+    const snippet = collectText(node);
+    if (snippet) {
+      snippets.add(snippet);
     }
-    walker = walker.parentElement;
+  };
+
+  // Immediate siblings or text blocks before the element
+  let sibling = element.previousElementSibling;
+  let hops = 0;
+  while (sibling && hops < 4) {
+    pushText(sibling);
+    sibling = sibling.previousElementSibling;
     hops += 1;
   }
 
-  return texts.join(" | ").slice(0, 200);
+  // Include parent text and their headings
+  let parent = element.parentElement;
+  hops = 0;
+  while (parent && hops < 4) {
+    if (parent.matches("fieldset")) {
+      pushText(parent.querySelector("legend"));
+    }
+
+    pushText(parent);
+    pushText(parent.previousElementSibling);
+
+    parent = parent.parentElement;
+    hops += 1;
+  }
+
+  // Nearby headings/labels in the same section
+  const container = element.closest(
+    "section, article, fieldset, div[role='group'], div[role='region'], div[role='listitem']"
+  );
+  if (container) {
+    const heading = container.querySelector("h1,h2,h3,h4,h5,h6,legend,label,strong");
+    pushText(heading);
+  }
+
+  return Array.from(snippets)
+    .filter(Boolean)
+    .slice(0, 4)
+    .join(" | ");
 };
+
+const getFormContext = element => {
+  const form = element.form || element.closest("form");
+  if (!form) return "";
+  const heading = form.querySelector("h1,h2,h3,legend");
+  if (heading?.innerText?.trim()) {
+    return heading.innerText.trim().slice(0, 200);
+  }
+  const describedBy = getAriaLinkedText(form, "aria-labelledby");
+  if (describedBy) return describedBy.slice(0, 200);
+  return collectText(form).slice(0, 200);
+};
+
+const getQuestionText = element => {
+  const deniedTokens = [/your answer/i, /response/i];
+  const selectors = QUESTION_CONTAINER_SELECTORS.join(",");
+  let container = selectors ? element.closest(selectors) : null;
+  if (!container) {
+    container = element.closest("div, section, article, li, td, th");
+  }
+
+  const scanContainer = node => {
+    if (!node) {
+      return "";
+    }
+
+    for (const selector of QUESTION_TEXT_SELECTORS) {
+      const matches = node.querySelectorAll(selector);
+      for (const candidate of matches) {
+        const text = collectText(candidate);
+        if (text && !deniedTokens.some(rx => rx.test(text))) {
+          return text;
+        }
+      }
+    }
+
+    const fallback = collectText(node);
+    if (fallback && !deniedTokens.some(rx => rx.test(fallback))) {
+      return fallback;
+    }
+
+    return "";
+  };
+
+  let hops = 0;
+  while (container && hops < 5) {
+    const text = scanContainer(container);
+    if (text && !deniedTokens.some(rx => rx.test(text))) {
+      return text;
+    }
+    container = container.parentElement;
+    hops += 1;
+  }
+
+  return "";
+};
+
 
 const deriveFieldId = element => {
   if (element.dataset.autofillFieldId) {
@@ -133,7 +302,9 @@ const collectFormFields = () => {
       placeholder: element.placeholder || "",
       ariaLabel: element.getAttribute("aria-label") || "",
       label: getLabelText(element),
-      nearbyText: getNearbyText(element)
+    //   nearbyText: getNearbyText(element),
+    //   formContext: getFormContext(element),
+      questionText: getQuestionText(element)
     });
   });
 
