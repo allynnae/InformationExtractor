@@ -1,6 +1,7 @@
-# Multi-Document Information Extractor
+# Autofill Application Assistant
 
-Searching for information across multiple documents is time-consuming and often requires reasoning beyond simple keyword matching. This project presents an application that uses large language models to automate information extraction from multiple documents. The system reads documents in various formats, processes user-defined questions, and outputs structured answers with source attribution. Performance is tracked using Weights and Biases.
+Searching for information across multiple documents is time-consuming and often requires reasoning beyond simple keyword matching. This project presents a browser-based graphical application that leverages large language models
+(LLMs) to automate multi-document information extraction and form autofill. The system allows users to upload and store documents in multiple formats and automatically populate corresponding fields within online application forms
 
 ---
 
@@ -14,9 +15,9 @@ Searching for information across multiple documents is time-consuming and often 
 ## Features
 
 - **Multi-format file support**: Process txt, md, json, csv, log, html, xml, and pdf files
-- **LLM-powered**: Uses Gemini for intelligent question answering
+- **LLM-powered**: Uses Gemini and Ollama for intelligent question answering
 - **Fast processing**: Handles multiple documents in an efficient manner
-- **Performance tracking**: Integrated W&B logging for metrics
+- **Performance testing**: Integrated ASSURE-inspired testing framework
 - **Simple UI**: Easy-to-use user interface
 
 ---
@@ -53,11 +54,16 @@ node -v
 npm -v
 ```
 
-### API Key Setup
+### LLM Setup
 
 Export your Gemini API key:
 ```bash
 export GEMINI_API_KEY=yourkey
+```
+Set the correct Ollama model:
+```bash
+ollama pull llama3.1
+OLLAMA_MODEL=llama3.1
 ```
 
 ---
@@ -95,7 +101,7 @@ Use the new ASSURE-style harness to mirror the process described in [ASSURE: Met
 - **Validation pipeline** - lexical/keyword invariants and security guards check consistency instead of relying on brittle exact matches.
 
 ### Run the demo
-1. Export `GEMINI_API_KEY` and start the API server: `npm run dev:server`.
+1. `npm run dev:server`.
 2. (Optional) Point to a different server with `ASSURE_SERVER_URL=http://localhost:4000`.
 3. From another terminal run `npm run demo:assure`.
 4. Review the PASS/FAIL report printed to the console. The script exits with code `1` if any invariant fails, making it easy to wire into CI.
@@ -104,3 +110,4 @@ Use the new ASSURE-style harness to mirror the process described in [ASSURE: Met
 
 ## Checkpoint 1 Manual Demo Scenarios
 - See `tests/prompt-scenarios-allison.md` for curated manual prompts and acceptance criteria.
+
