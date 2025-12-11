@@ -258,9 +258,12 @@ const deriveFieldId = element => {
     .replace(/\s+/g, "-")
     .toLowerCase();
 
-  const fieldId = keyParts
-    ? `field-${keyParts.slice(0, 48)}`
-    : `field-generated-${++fieldCounter}`;
+  const baseId = keyParts ? `field-${keyParts.slice(0, 48)}` : null;
+
+  let fieldId = baseId ? baseId : `field-generated-${++fieldCounter}`;
+  while (fieldRegistry.has(fieldId)) {
+    fieldId = `${baseId || "field-generated"}-${++fieldCounter}`;
+  }
 
   element.dataset.autofillFieldId = fieldId;
   fieldRegistry.set(fieldId, element);

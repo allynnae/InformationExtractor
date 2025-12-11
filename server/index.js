@@ -23,8 +23,8 @@ const client = new OpenAI({
 
 const FALLBACK_ANSWER = "UNABLE TO IDENTIFY, USER INPUT REQUIRED";
 const MAX_CONTEXT_CHARS = 20000;
-const MAX_RESPONSE_CHARS = 100;
-const MAX_RESPONSE_WORDS = 15;
+const MAX_RESPONSE_CHARS = 300;
+const MAX_RESPONSE_WORDS = 50;
 const RETRY_ATTEMPTS = 3;
 const RETRY_BASE_DELAY_MS = 500;
 
@@ -113,7 +113,7 @@ const withRetry = async (operation, { attempts = 3, baseDelay = 250, requestId =
 // More permissive answer validation
 const normalizeAnswer = (rawAnswer, context, requestId) => {
   const safeRawAnswer = String(rawAnswer ?? "");
-  console.log(`[${requestId}] 📥 RAW LLM RESPONSE: "${safeRawAnswer}"`);
+  console.log(`[${requestId}] RAW LLM RESPONSE: "${safeRawAnswer}"`);
   
   if (!safeRawAnswer) {
     console.log(`[${requestId}] VALIDATION: Empty response`);
@@ -219,6 +219,11 @@ app.post("/api/extract-pdf", upload.single("file"), async (req, res) => {
   }
 });
 
+////////////////////
+//LLM Generation
+//
+//Used to ask the LLM to extract answers from document content
+/////////////////////
 app.post("/api/ask", async (req, res) => {
   let requestId = null;
   try {
@@ -294,6 +299,13 @@ Bad: "The name in the document is John Smith"`;
     res.status(500).json({ error: error.message || "Unexpected server error." });
   }
 });
+
+
+////////////////////
+//LLM VERIFICATION
+//
+//Used to verify if the extracted answer is supported by the document context
+/////////////////////
 
 app.post("/api/verify-answer", async (req, res) => {
   let requestId = randomUUID().split("-")[0];
