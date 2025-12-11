@@ -8,7 +8,7 @@
     "start": "echo \"Load this extension via chrome://extensions\"",
     "dev": "npm run dev:server",
     "dev:server": "node server/index.js",
-    "demo:assure": "node demo/assure-demo.js"
+    "demo:assure": "node tests/assure-demo.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
