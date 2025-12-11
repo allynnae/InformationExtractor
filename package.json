@@ -6,6 +6,7 @@
   "scripts": {
     "build": "echo \"No build step needed for extension\"",
     "start": "echo \"Load this extension via chrome://extensions\"",
+    "dev": "npm run dev:server",
     "dev:server": "node server/index.js",
     "demo:assure": "node demo/assure-demo.js"
   },

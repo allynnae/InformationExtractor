@@ -34,7 +34,6 @@ const getContextBundle = async () => {
       
       console.log(`  - ${docName}: ${content.length} chars`);
       
-      // Add clear document boundaries and metadata
       parts.push(
         `=== ${docName.toUpperCase()} ===\n${content}\n=== END ${docName.toUpperCase()} ===`
       );
@@ -49,39 +48,37 @@ const getContextBundle = async () => {
 // ---------- Enhanced question construction ----------
 const buildFieldQuestion = (field) => {
   const parts = [];
-  
-  // Prioritize the most specific identifiers
+
   if (field.questionText) {
     parts.push(`Question: "${field.questionText}"`);
   }
-  
+
   if (field.label && field.label !== field.questionText) {
     parts.push(`Field Label: "${field.label}"`);
   }
-  
+
   if (field.placeholder) {
     parts.push(`Placeholder: "${field.placeholder}"`);
   }
-  
+
   if (field.formContext) {
     parts.push(`Form: "${field.formContext}"`);
   }
-  
+
   if (field.type) {
     parts.push(`Type: ${field.type}`);
   }
-  
+
   if (field.name) {
     parts.push(`Name: ${field.name}`);
   }
-  
+
   if (field.nearbyText) {
     parts.push(`Context: "${field.nearbyText}"`);
   }
-  
-  // Build a clear, specific question
+
   let mainQuestion = "";
-  
+
   if (field.questionText) {
     mainQuestion = field.questionText;
   } else if (field.label) {
@@ -93,10 +90,9 @@ const buildFieldQuestion = (field) => {
   } else {
     mainQuestion = "value for this field";
   }
-  
-  // Create the structured question
+
   const fieldMetadata = parts.join("\n");
-  
+
   const question = `${fieldMetadata}
 
 Extract the specific value that answers: "${mainQuestion}"
@@ -183,7 +179,6 @@ const runAutofill = async () => {
     throw new Error("No fillable fields detected on this page.");
   }
 
-  // Log field summary
   console.log("DETECTED FIELDS:");
   fields.forEach((field, idx) => {
     console.log(`  ${idx + 1}. ${field.questionText || field.label || field.placeholder || field.fieldId}`);

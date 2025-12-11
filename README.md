@@ -77,7 +77,7 @@ npm install
 
 Run this in the background before going to the extension:
 ```bash
-npm run dev:server
+npm run dev 
 ```
 
 ### Accessing the Interface
